@@ -1,7 +1,11 @@
-import { View, Text, StyleSheet, TextInput } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
+import { useNavigation } from '@react-navigation/native';
 
 export default function NovaTarefa() {
+
+    const navigation = useNavigation();
+
     return (
         <View>
             <View style={styles.cabecalho}>
@@ -24,7 +28,24 @@ export default function NovaTarefa() {
                 <TextInput
                     style={styles.textInput}
                     placeholder='Value'
+                    multiline
+                    numberOfLines={3}
                 />
+
+                <TextInput 
+                    style={styles.textDate}
+                    placeholder='dd/mm/yyyy'
+                />
+
+                <View style={styles.containerBotao}>
+                    <TouchableOpacity style={styles.botao} onPress={() => navigation.goBack()}>
+                        <Text style={styles.botaoTexto}>Cancel</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={styles.botao}>
+                        <Text style={styles.botaoTexto}>OK</Text>
+                    </TouchableOpacity>
+                </View>
 
             </View>
         </View>
@@ -51,7 +72,7 @@ const styles = StyleSheet.create({
         textAlign: 'center'
     },
     body: {
-        padding: 15
+        padding: 15,
     },
     texto: {
         marginBottom: 5
@@ -63,5 +84,25 @@ const styles = StyleSheet.create({
         padding: 10,
         backgroundColor: 'white',
         marginBottom: 15
+    },
+    textDate: {
+        height: 60,
+        borderWidth: 3,
+        borderColor: 'indigo',
+        borderRadius: 5,
+        margin: 40,
+        marginVertical: 30,
+        padding: 15,
+        backgroundColor: 'white'
+    },
+    containerBotao: {
+        flexDirection: 'row',
+        justifyContent: 'end'
+    },
+    botao: {
+        padding: 15
+    },
+    botaoTexto: {
+        color: 'indigo'
     }
 });
