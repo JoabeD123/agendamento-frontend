@@ -4,7 +4,6 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Home from './src/screens/Home';
 import EditTask from './src/screens/EditTask';
 import NovaTarefa from './src/screens/NovaTarefa';
-import NovaTarefa from './src/screens/NovaTarefa';
 
 const RootStack = createNativeStackNavigator({
   initialRouteName: 'Home',
