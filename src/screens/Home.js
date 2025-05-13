@@ -2,13 +2,21 @@ import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-nati
 import TarefaItem from '../components/TarefaItem';
 import { useNavigation } from '@react-navigation/native';
 useNavigation
-
+import {getData} from '../storage/AsyncStorage';
+import { useEffect, useState } from 'react';
 
 export default function Home() {
 
     const navigation = useNavigation();
+    const [tasks, setTasks] = useState([]);
+
+    useEffect(async() => {
+        const data = await getData('tarefas');
+        setTasks(data);
+    }, []);
 
 
+    
     return (
         <View style={styles.container}>
             <View style={styles.cabecalho}>
@@ -22,13 +30,21 @@ export default function Home() {
                     data="24/04/2004" 
                     categoria="reunião"
                 />
-                <TarefaItem 
-                    nome="Tarefa 2" 
-                    status="concluído" 
-                    data="35/13/2088" 
-                    categoria="estudo"
-                />
-            </ScrollView>
+
+                {tasks.map((item) => {
+                    return (
+                        <TarefaItem 
+                            key={item.id_tarefas}
+                            nome={item.nome_tarefa} 
+                            status={item.status} 
+                            data={item.data_inicial} 
+                            categoria={item.prioridade}
+                        />
+                    )
+                })}
+
+
+              </ScrollView>
 
             <TouchableOpacity 
                 style={styles.botaoAdicionar}
