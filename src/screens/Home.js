@@ -31,7 +31,7 @@ export default function Home() {
                     categoria="reunião"
                 />
 
-                {tasks.map((item) => {
+                {tasks && tasks.map((item) => {
                     return (
                         <TarefaItem 
                             key={item.id_tarefas}
