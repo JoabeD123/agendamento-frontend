@@ -20,7 +20,8 @@ export default function NovaTarefa() {
             nome: nome,
             categoria: categotia,
             data: data,
-            descricao: descricao
+            descricao: descricao,
+            status: 'não iniciada'
         };
 
         if (nome.trim() === '') {
