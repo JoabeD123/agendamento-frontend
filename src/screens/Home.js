@@ -1,22 +1,29 @@
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import TarefaItem from '../components/TarefaItem';
+import React, { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
-useNavigation
-import {getData} from '../storage/AsyncStorage';
-import { useEffect, useState } from 'react';
+import { getData } from '../storage/AsyncStorage';
 
 export default function Home() {
 
     const navigation = useNavigation();
-    const [tasks, setTasks] = useState([]);
 
-    useEffect(async() => {
-        const data = await getData('tarefas');
+    const [ tasks, setTasks ] = useState(null)
+    const [ isLoaded, setIsLoaded ] = useState(true)
+
+    const loadData = async () => {
+        const data = await getData();
         setTasks(data);
-    }, []);
+        setIsLoaded(!isLoaded)
+    }
 
+    // Executa ao carregar a página
+    useEffect(() => {
+        if(isLoaded){
+            loadData();
+        }
+    }, [isLoaded]);
 
-    
     return (
         <View style={styles.container}>
             <View style={styles.cabecalho}>
@@ -24,32 +31,25 @@ export default function Home() {
                 <View style={styles.icone}></View>
             </View>
             <ScrollView style={styles.body}>
-                <TarefaItem 
-                    nome="Tarefa 1" 
-                    status="a cumprir" 
-                    data="24/04/2004" 
-                    categoria="reunião"
-                />
-
-                {tasks && tasks.map((item) => {
-                    return (
-                        <TarefaItem 
-                            key={item.id_tarefas}
-                            nome={item.nome_tarefa} 
-                            status={item.status} 
-                            data={item.data_inicial} 
-                            categoria={item.prioridade}
-                        />
-                    )
-                })}
-
-
-              </ScrollView>
+                {
+                    tasks && tasks.map((item, index) => {
+                        return (
+                            <TarefaItem
+                                key={index}
+                                nome={item.nome}
+                                status={item.status}
+                                data={item.data}
+                                categoria={item.categoria}
+                            />
+                        )
+                    })
+                }
+            </ScrollView>
 
             <TouchableOpacity 
                 style={styles.botaoAdicionar}
                 onPress={() => {
-                    navigation.navigate('NovaTarefa')
+                    navigation.navigate("NovaTarefa")
                 }}
             >
                 <Text style={styles.botaoMais}>+</Text>
