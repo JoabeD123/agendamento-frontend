@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
 export default function TarefaItem(props) {
 
@@ -8,6 +8,10 @@ export default function TarefaItem(props) {
         statusColor = 'green';
     }
 
+    const handleRemove = () => {
+        props.onRemove(props.id);
+    };
+
     return (
         <View style={styles.container}>
             <Text style={styles.titulo}>{props.nome}</Text>
@@ -16,6 +20,9 @@ export default function TarefaItem(props) {
             <View style={{ ...styles.status, backgroundColor: statusColor }}>
                 <Text style={styles.textoStatus}>{props.status}</Text>
             </View>
+            <TouchableOpacity style={styles.botaoRemover} onPress={handleRemove}>
+                <Text style={styles.textoRemover}>×</Text>
+            </TouchableOpacity>
         </View>
     )
 }
@@ -26,7 +33,10 @@ const styles = StyleSheet.create({
         height: 100,
         padding: 15,
         borderBottomWidth: 1,
-        borderColor: '#ccc'
+        borderColor: '#ccc',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center'
     },
     titulo: {
         fontWeight: 'bold',
@@ -43,13 +53,22 @@ const styles = StyleSheet.create({
         backgroundColor: 'orange',
         width: 150,
         height: 30,
-        borderRadius: 30,
-        justifyContent: 'center',
-        alignItems: 'center',
-        position: 'absolute',
-        left: 150
     },
     textoStatus: {
         color: 'white'
+    },
+    botaoRemover: {
+        backgroundColor: 'red',
+        padding: 10,
+        borderRadius: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: 30,
+        height: 30
+    },
+    textoRemover: {
+        color: 'white',
+        fontSize: 24,
+        fontWeight: 'bold'
     }
 });
