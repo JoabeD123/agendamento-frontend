@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView } from 
 import { Picker } from '@react-native-picker/picker';
 import { useNavigation } from '@react-navigation/native';
 import { useState } from 'react';
-import { addData } from '../storage/async-storage';
+import { addData } from '../storage/AsyncStorage';
 import MaskInput from 'react-native-mask-input';
 
 export default function NovaTarefa() {
