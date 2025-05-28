@@ -1,62 +1,95 @@
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
-import TarefaItem from '../components/TarefaItem';
-import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView } from 'react-native';
+import { Picker } from '@react-native-picker/picker';
 import { useNavigation } from '@react-navigation/native';
-import { getData } from '../storage/AsyncStorage';
+import { useState } from 'react';
+import { addData } from '../storage/async-storage';
+import MaskInput from 'react-native-mask-input';
 
-export default function Home() {
+export default function NovaTarefa() {
 
     const navigation = useNavigation();
 
-    const [ tasks, setTasks ] = useState(null)
-    const [ isLoaded, setIsLoaded ] = useState(true)
+    const [ nome, setNome ] = useState('')
+    const [ categotia, setCategotia ] = useState('prova')
+    const [ descricao, setDescricao ] = useState('')
+    const [ data, setData ] = useState('')
 
-    const loadData = async () => {
-        const data = await getData();
-        setTasks(data);
-        setIsLoaded(!isLoaded)
-    }
+    const handleSave = async () => {
+        const tarefa = {
+            nome: nome,
+            categoria: categotia,
+            data: data,
+            descricao: descricao,
+            status: 'A fazer'
+        };
 
-    // Executa ao carregar a página
-    useEffect(() => {
-        if(isLoaded){
-            loadData();
+        if (nome.trim() == '') {
+            alert("Campo nome não preenchido")            
         }
-    }, [isLoaded]);
+        else if (descricao.trim() == '') {
+            alert("Campo descrição não preenchido") 
+        }
+        else if (data.trim() == '') {
+            alert("Campo data não preenchido") 
+        }
+        else {
+            await addData(tarefa)
+            alert("Nova tarefa cadastrada!")
+            navigation.navigate('Home')
+        }
+    }
 
     return (
         <View style={styles.container}>
             <View style={styles.cabecalho}>
-                <Text style={styles.titulo}>ABRIL / 2025</Text>
-                <View style={styles.icone}></View>
+                <Text style={styles.titulo}>Adicionar Tarefa</Text>
             </View>
             <ScrollView style={styles.body}>
-                {
-                    tasks && tasks.map((item, index) => {
-                        return (
-                            <TarefaItem
-                                key={index}
-                                nome={item.nome}
-                                status={item.status}
-                                data={item.data}
-                                categoria={item.categoria}
-                            />
-                        )
-                    })
-                }
-            </ScrollView>
+                <Text style={styles.texto}>Nome da Tarefa:</Text>
+                <TextInput style={styles.textInput} value={nome} onChangeText={texto => setNome(texto)} />
 
-            <TouchableOpacity 
-                style={styles.botaoAdicionar}
-                onPress={() => {
-                    navigation.navigate("NovaTarefa")
-                }}
-            >
-                <Text style={styles.botaoMais}>+</Text>
-            </TouchableOpacity>
+                <Text style={styles.texto}>Categotia da Tarefa:</Text>
+                <Picker style={styles.textInput} selectedValue={categotia} onValueChange={texto => setCategotia(texto)}>
+                    <Picker.Item label="Estudo" value="estudo" />
+                    <Picker.Item label="Trabalho" value="trabalho" />
+                    <Picker.Item label="Reunião" value="reuniao" />
+                    <Picker.Item label="Prova" value="prova" />
+                    <Picker.Item label="Aula" value="aula" />
+                </Picker>
+
+                <Text style={styles.texto}>Descrição da Tarefa:</Text>
+                <TextInput
+                    style={styles.textInput}
+                    placeholder='Value'
+                    multiline
+                    numberOfLines={3}
+                    value={descricao} onChangeText={texto => setDescricao(texto)}
+                />
+
+                <MaskInput 
+                    style={styles.textDate}
+                    placeholder='dd/mm/yyyy'
+                    value={data} onChangeText={texto => setData(texto)}
+                    mask={[/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/]}
+                />
+
+                <View style={styles.containerBotao}>
+                    <TouchableOpacity style={styles.botao} onPress={() => navigation.goBack()}>
+                        <Text style={styles.botaoTexto}>Cancel</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={styles.botao} onPress={() => {
+                        handleSave()
+                    }}>
+                        <Text style={styles.botaoTexto}>OK</Text>
+                    </TouchableOpacity>
+                </View>
+
+            </ScrollView>
         </View>
-    );
+    )
 }
+
 
 const styles = StyleSheet.create({
     container: {
@@ -76,31 +109,38 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         textAlign: 'center'
     },
-    icone: {
-        backgroundColor: 'gray',
-        width: 40,
-        height: 40,
-        borderRadius: 20,
-        position: 'absolute',
-        right: 15
-    },
     body: {
-        flex: 1
+        padding: 15,
     },
-    botaoAdicionar: {
-        width: 50,
-        height: 50,
-        backgroundColor: 'blue',
-        borderRadius: 30,
-        position: 'absolute',
-        bottom: 15,
-        right: 15,
-        justifyContent: 'center',
-        alignItems: 'center'
+    texto: {
+        marginBottom: 5
     },
-    botaoMais: {
-        fontSize: 40,
-        color: 'white',
-        fontWeight: 'bold',
+    textInput: {
+        borderWidth: 1,
+        borderRadius: 10,
+        borderColor: '#ccc',
+        padding: 10,
+        backgroundColor: 'white',
+        marginBottom: 15
+    },
+    textDate: {
+        height: 60,
+        borderWidth: 3,
+        borderColor: 'indigo',
+        borderRadius: 5,
+        margin: 40,
+        marginVertical: 30,
+        padding: 15,
+        backgroundColor: 'white'
+    },
+    containerBotao: {
+        flexDirection: 'row',
+        justifyContent: 'end'
+    },
+    botao: {
+        padding: 15
+    },
+    botaoTexto: {
+        color: 'indigo'
     }
 });

@@ -2,9 +2,8 @@ import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView } from 
 import { Picker } from '@react-native-picker/picker';
 import { useNavigation } from '@react-navigation/native';
 import { useState } from 'react';
-
+import { addData } from '../storage/async-storage';
 import MaskInput from 'react-native-mask-input';
-import { addData } from '../storage/AsyncStorage';
 
 export default function NovaTarefa() {
 
@@ -21,22 +20,22 @@ export default function NovaTarefa() {
             categoria: categotia,
             data: data,
             descricao: descricao,
-            status: 'não iniciada'
+            status: 'A fazer'
         };
 
-        if (nome.trim() === '') {
-            alert('Por favor, insira um nome para a tarefa.');
+        if (nome.trim() == '') {
+            alert("Campo nome não preenchido")            
         }
-        else if (descricao.trim() === '') {
-            alert('Por favor, insira uma descrição para a tarefa.');
+        else if (descricao.trim() == '') {
+            alert("Campo descrição não preenchido") 
         }
-        else if (data.trim() === '') {
-            alert('Por favor, insira uma data para a tarefa.');
+        else if (data.trim() == '') {
+            alert("Campo data não preenchido") 
         }
         else {
-            await addData(tarefa);
-            alert('Tarefa adicionada com sucesso!');
-            navigation.navigate('Home');
+            await addData(tarefa)
+            alert("Nova tarefa cadastrada!")
+            navigation.navigate('Home')
         }
     }
 
@@ -67,11 +66,11 @@ export default function NovaTarefa() {
                     value={descricao} onChangeText={texto => setDescricao(texto)}
                 />
 
-                <MaskInput
+                <MaskInput 
                     style={styles.textDate}
                     placeholder='dd/mm/yyyy'
                     value={data} onChangeText={texto => setData(texto)}
-                    mask={['(', /[1-9]/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/, ')']}
+                    mask={[/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/]}
                 />
 
                 <View style={styles.containerBotao}>
